@@ -18,7 +18,7 @@ export function reducer<TState, TAction extends Action<any>>(nativeReducer: Redu
         const newState = nativeReducer(state, action);
 
         if (path && oldState !== newState) {
-            console.log(`reducer ${path} changed`, newState);
+            console.log(`reducer ${path} changed`);
             onReducerStateChanged(path);
         }
 

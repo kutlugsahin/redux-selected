@@ -103,7 +103,7 @@ function createStateProxy(reduxState: any, pathReadCallback: (path: string) => v
                     return get(store.getState(), currentPath);
                 },
             });
-        } else {
+        } else if (typeof reduxState === 'object') {
             acc[key] = createStateProxy(reduxState[key], pathReadCallback, currentPath);
         }
 

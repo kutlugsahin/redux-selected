@@ -1,7 +1,10 @@
 import { Action } from "../interface";
 
 export interface ItemListState {
-	[id: string]: string[];
+	[id: string]: {
+		id: string;
+		items: string[];
+	};
 }
 
 export const PUT_LIST = 'put-list';
@@ -11,7 +14,7 @@ const randomId = () => (Math.random() * 100).toFixed();
 
 const initalState = Array(100).fill(undefined).reduce((acc, _, index) => {
 	acc[index] = {
-		id: index,
+		id: String(index),
 		items: Array(10).fill(undefined).map(randomId),
 	}
 	return acc;

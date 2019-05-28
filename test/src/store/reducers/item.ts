@@ -3,7 +3,7 @@ import { Action } from "../interface";
 export interface Item {
 	id: string,
 	name: string;
-	itemListId: string;
+	itemListId?: string;
 }
 
 export interface ItemState {
@@ -17,7 +17,7 @@ const randomId = () => (Math.random() * 100).toFixed();
 
 const initialState = Array(1000).fill(undefined).reduce((acc, _, index) => {
 	acc[index] = {
-		id: index,
+		id: String(index),
 		name: `Item ${index}`,
 		itemListId: randomId(),
 	}
