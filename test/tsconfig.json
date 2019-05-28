@@ -1,0 +1,27 @@
+{
+	"compilerOptions": {
+		"lib": [
+			"dom",
+			"esnext"
+		],
+		"allowSyntheticDefaultImports": true,
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"preserveConstEnums": true,
+		"removeComments": false,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true,
+		"target": "esnext",
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"strictFunctionTypes": true,
+		"declaration": true,
+		"declarationDir": "dist/types",
+		"strictNullChecks": true,
+		"noImplicitThis": false,
+		"outDir": "dist"
+	}
+}

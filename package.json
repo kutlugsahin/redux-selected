@@ -1,0 +1,12 @@
+{
+  "name": "redux-selected-workspace",
+  "version": "1.0.0",
+  "author": "kutlu sahin",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "./redux-selected",
+    "./app",
+    "./test"
+  ]
+}

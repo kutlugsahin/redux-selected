@@ -1,0 +1,68 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\ksahin\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js
+
+PATH: 
+  C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\Docker\Docker\Resources\bin;C:\app\ksahin\product\12.1.0\client_1;C:\app\ksahin\product\12.1.0\client_1\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Git\cmd;%USERPROFILE%\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\ProgramData\chocolatey\bin;C:\Program Files\Java\jdk1.8.0_162\bin;C:\Program Files\dotnet\;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\nodejs\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Users\ksahin\AppData\Local\Microsoft\WindowsApps;C:\Users\ksahin\AppData\Local\Programs\Fiddler;C:\Users\ksahin\.dotnet\tools;C:\Users\ksahin\AppData\Roaming\npm
+
+Yarn version: 
+  1.15.2
+
+Node version: 
+  8.12.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.npmjs.org/redux-selected: Not found
+      at Request.params.callback [as _callback] (C:\Users\ksahin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66058:18)
+      at Request.self.callback (C:\Users\ksahin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:129541:22)
+      at emitTwo (events.js:126:13)
+      at Request.emit (events.js:214:7)
+      at Request.<anonymous> (C:\Users\ksahin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:130513:10)
+      at emitOne (events.js:116:13)
+      at Request.emit (events.js:211:7)
+      at IncomingMessage.<anonymous> (C:\Users\ksahin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:130435:12)
+      at Object.onceWrapper (events.js:313:30)
+      at emitNone (events.js:111:20)
+
+npm manifest: 
+  {
+  	"name": "redux-selected-app",
+  	"version": "1.0.0",
+  	"private": true,
+  	"scripts": {
+  		"start": "webpack-dev-server --mode=development --config webpack.config.js"
+  	},
+  	"dependencies": {
+  		"@babel/core": "^7.4.5",
+  		"@babel/preset-env": "7.4.5",
+  		"@babel/preset-typescript": "7.3.3",
+  		"@babel/preset-react": "7.0.0",
+  		"@types/jest": "^24.0.13",
+  		"@types/node": "^12.0.2",
+  		"@types/react": "^16.8.18",
+  		"@types/react-dom": "^16.8.4",
+  		"@types/react-redux": "^7.0.9",
+  		"@types/redux": "^3.6.0",
+  		"babel-jest": "^24.8.0",
+  		"babel-loader": "8.0.6",
+  		"jest": "24.8.0",
+  		"react": "^16.8.6",
+  		"react-dom": "^16.8.6",
+  		"react-redux": "6.0.1",
+  		"redux": "4.0.1",
+  		"typescript": "3.4.5",
+  		"webpack": "4.32.2",
+  		"webpack-cli": "3.3.2",
+  		"webpack-dev-server":"3.4.1",
+  		"redux-selected": "1.0.0",
+  		"html-webpack-plugin": "3.2.0"
+  	}
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

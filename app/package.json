@@ -1,0 +1,33 @@
+{
+	"name": "redux-selected-app",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"start": "webpack-dev-server --mode=development --config webpack.config.js"
+	},
+	"dependencies": {
+		"@babel/core": "^7.4.5",
+		"@babel/preset-env": "7.4.5",
+		"@babel/preset-typescript": "7.3.3",
+		"@babel/preset-react": "7.0.0",
+		"@types/jest": "^24.0.13",
+		"@types/node": "^12.0.2",
+		"@types/react": "^16.8.18",
+		"@types/react-dom": "^16.8.4",
+		"@types/react-redux": "^7.0.9",
+		"@types/redux": "^3.6.0",
+		"babel-jest": "^24.8.0",
+		"babel-loader": "8.0.6",
+		"jest": "24.8.0",
+		"react": "^16.8.6",
+		"react-dom": "^16.8.6",
+		"react-redux": "7.0.3",
+		"redux": "4.0.1",
+		"typescript": "3.4.5",
+		"webpack": "4.32.2",
+		"webpack-cli": "3.3.2",
+		"webpack-dev-server":"3.4.1",
+		"redux-selected": "1.0.0",
+		"html-webpack-plugin": "3.2.0"
+	}
+}
