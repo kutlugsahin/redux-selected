@@ -13,6 +13,7 @@
     "start": "cd app&&yarn start",
     "test": "cd test&&yarn test",
     "build": "cd redux-selected&&yarn build",
-    "release": "cd redux-selected&&yarn release"
+    "release": "cd redux-selected&&yarn release",
+    "publish": "cd redux-selected&&yarn publish"
   }
 }

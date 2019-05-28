@@ -14,6 +14,14 @@ module.exports = {
         filename: 'index.js',
         libraryTarget: 'umd',
     },
+    externals: {
+        redux: {
+            commonjs: 'redux',
+            commonjs2: 'redux',
+            amd: 'redux',
+            root: 'Redux'
+        },
+    },
     module: {
         rules: [
             {

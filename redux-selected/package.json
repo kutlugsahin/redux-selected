@@ -1,14 +1,14 @@
 {
 	"name": "redux-selected",
 	"version": "1.0.0",
-	"main": "./src/index.ts",
+	"main": "dist/index.js",
 	"scripts": {
 		"tsc": "tsc",
 		"build": "webpack --mode=development --config webpack.config.js",
 		"release": "yarn tsc && webpack --mode=production --config webpack.config.js",
 		"test": "jest",
 		"tsc:test": "tsc test/debugtest.ts",
-		"demo": "cd app&&yarn start"
+		"pulish": "yarn release&&npm publish"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.4.5",
@@ -31,10 +31,11 @@
 		"webpack": "4.32.2",
 		"webpack-cli": "3.3.2"
 	},
+	"files": ["dist"],
 	"peerDependencies": {
 		"redux": ">=4.0.1"
 	},
-	"types": "./types",
+	"types": "dist/types",
 	"jest": {
 		"verbose": true,
 		"roots": [
