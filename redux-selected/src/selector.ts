@@ -43,8 +43,9 @@ function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
             if (cachedValue === NOT_EXITS) {
                 cachedValue = runSelector(params);
                 cache.set(params, cachedValue);
+            } else {
+                onSelectorCacheReturn(watcher);
             }
-            onSelectorCacheReturn(watcher);
             return cachedValue;
         }
     };
