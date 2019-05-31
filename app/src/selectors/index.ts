@@ -21,6 +21,10 @@ export const selectFirstUser = selector((state: State) => {
 	};
 })
 
+export const selectFirstUserName = selector(() => {
+	return selectFirstUser().name;
+})
+
 export const selectTheme = selector((state: State) => {
 	return state.ui.theme;
 });

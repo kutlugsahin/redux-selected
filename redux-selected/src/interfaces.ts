@@ -15,6 +15,8 @@ export interface Dictionary<TValue> {
 export interface Watcher {
     id: number;
     notify: () => boolean;
+    getCache: () => ParamCache;
+    run: (params: any[]) => any;
 }
 
 export type S0<S, R> = (state: S) => R;
@@ -46,4 +48,10 @@ export interface F3<S, R, P1, P2, P3> extends F<S3<S, R, P1, P2, P3>> {
 
 export interface F4<S, R, P1, P2, P3> extends F<S4<S, R, P1, P2, P3>> {
     (p1: P1, p2: P2, p3: P3, ...params: any[]): R;
+}
+
+export interface ParamCache {
+    get: (params: any[]) => any;
+    set: (params: any[], val: any) => void;
+    setSize: (size: number) => void;
 }

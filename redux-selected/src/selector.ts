@@ -23,10 +23,16 @@ function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
 
             return false;
         },
+        getCache: () => {
+            return cache;
+        },
+        run: (params: any[]) => {
+            return result(params);
+        }
     };
 
     function runSelector(params: any[]) {
-        registerSelectorPropWatcher(watcher);
+        registerSelectorPropWatcher(watcher, params);
         const selectorResult = nativeSelector(getState() as S, ...params);
         unregisterSelectorPropWatcher(watcher);
         cache.set(params, selectorResult);
@@ -44,7 +50,7 @@ function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
                 cachedValue = runSelector(params);
                 cache.set(params, cachedValue);
             } else {
-                onSelectorCacheReturn(watcher);
+                onSelectorCacheReturn(watcher, params);
             }
             return cachedValue;
         }

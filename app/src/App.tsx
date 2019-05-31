@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 import { addUser, User } from './store/users';
 import { setPanelState, PanelState } from './store/ui/panelStates';
-import { selectLeftPanelState, selectFirstUser, selectTheme } from './selectors';
+import { selectLeftPanelState, selectFirstUser, selectTheme, selectFirstUserName } from './selectors';
 import { State } from './store';
 import { Theme, setTheme } from './store/ui/theme';
 
@@ -18,6 +18,7 @@ interface DispatchProps {
 interface StateProps {
     leftPanelState: PanelState;
     firstUser: User;
+    firstUserName: string;
     theme: Theme;
 }
 
@@ -41,6 +42,9 @@ class App extends React.Component<AppProps, { index: number }> {
     render() {
         return (
             <div className={'container'} style={this.props.theme}>
+                <div>
+                    <b>{this.props.firstUserName}</b>
+                </div>
                 <div>
                     {this.props.firstUser ? <b>User: {this.props.firstUser.name}</b> : null}
                 </div>
@@ -79,6 +83,7 @@ function mapState(state: State): StateProps {
     return {
         leftPanelState: selectLeftPanelState(),
         firstUser: selectFirstUser(),
+        firstUserName: selectFirstUserName(),
         theme: selectTheme(),
     }
 }

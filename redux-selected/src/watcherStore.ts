@@ -1,5 +1,5 @@
 import { dependency } from './dependency';
-import { Watcher } from './interfaces';
+import { Watcher, ParamCache } from './interfaces';
 
 export function createWatcherStore() {
     const reducerWatchers = new Map<string, Map<number, Watcher>>();
@@ -24,10 +24,10 @@ export function createWatcherStore() {
         watcherReducers.get(id)!.set(path, true);
     }
 
-    function addWatcherDependency(dependentWatcher: Watcher, dependencyWatcher: Watcher) {
+    function addWatcherDependency(dependentWatcher: Watcher, dependencyWatcher: Watcher, params: any[]) {
         watchers.set(dependentWatcher.id, dependentWatcher);
         watchers.set(dependencyWatcher.id, dependencyWatcher);
-        dependencies.addDependency(dependentWatcher, dependencyWatcher);
+        dependencies.addDependency(dependentWatcher, dependencyWatcher, params);
     }
 
     function clearDependencies(watcher: Watcher) {
@@ -45,33 +45,30 @@ export function createWatcherStore() {
         }
     }
 
-    // function getWatchersOfPath(path: string) {
-    //     const watchersOfPath = reducerWatchers.get(path);
-    //     return watchersOfPath ? watchersOfPath.values() : [];
-    // }
+    function notifyWatcherForPaths(paths: string[]) {
+        const rootWatchersMap = paths.reduce((acc: any, path) => {
+            for (const [id, watcher] of (reducerWatchers.get(path) || [])) {
+                acc[id] = watcher;
+            }
+            return acc;
+        }, {});
 
-    function getWatcherDependencies(id: number) {
-        return dependencies.getDependents(id).map((key) => watchers.get(key));
-    }
+        const watcherQueue: Watcher[] = Object.keys(rootWatchersMap).map(p => rootWatchersMap[p]);
+        const prevParamCacheMap = new Map<number, ParamCache>();
 
-    function notifyWatcherForPath(path: string) {
-        function notifyWatcher(id: number) {
-            const watcher = watchers.get(id);
-            if (watcher!.notify()) {
-                dependencies.getDependents(id).forEach(notifyWatcher);
+        while (watcherQueue.length > 0) {
+            const watcher = watcherQueue.pop()!;
+            prevParamCacheMap.set(watcher.id, watcher.getCache());
+            if (watcher.notify()) {
+                const dependents = dependencies.getDependents(watcher.id);
+
+                for (const dependent of dependents) {
+                    if (dependent.paramsArr.some(params => prevParamCacheMap.get(watcher.id)!.get(params) !== watcher.run(params))) {
+                        watcherQueue.unshift(watchers.get(dependent.id)!);
+                    }
+                }
             }
         }
-
-        const pathWatchers = reducerWatchers.get(path);
-        if (pathWatchers) {
-            for (const watcher of pathWatchers.values()) {
-                notifyWatcher(watcher.id);
-            }
-        }
-    }
-
-    function getAll() {
-        return watchers.values();
     }
 
     function invalidateAll() {
@@ -81,13 +78,10 @@ export function createWatcherStore() {
     }
 
     return {
-        getAll,
         invalidateAll,
         addReducerDependency,
         addWatcherDependency,
-        // getWatchersOfPath,
-        getWatcherDependencies,
-        notifyWatcherForPath,
+        notifyWatcherForPaths,
         clearDependencies,
     };
 }

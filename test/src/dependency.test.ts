@@ -6,7 +6,9 @@ function watcher(id: number): Watcher {
 		id,
 		notify() { 
 			return false;
-		}
+		},
+		getCache: () => undefined!,
+		run: () => {}
 	}
 }
 
@@ -30,11 +32,11 @@ describe('dependency test', () => {
 		dependency.addDependency(w2, w5);
 		dependency.addDependency(w2, w6);
 
-		expect(dependency.getDependents(2)).toEqual([1]);
-		expect(dependency.getDependents(3)).toEqual([1]);
-		expect(dependency.getDependents(4)).toEqual([1]);
-		expect(dependency.getDependents(5)).toEqual([2]);
-		expect(dependency.getDependents(6)).toEqual([2]);
+		expect(dependency.getDependents(2).map(p => p.id)).toEqual([1]);
+		expect(dependency.getDependents(3).map(p => p.id)).toEqual([1]);
+		expect(dependency.getDependents(4).map(p => p.id)).toEqual([1]);
+		expect(dependency.getDependents(5).map(p => p.id)).toEqual([2]);
+		expect(dependency.getDependents(6).map(p => p.id)).toEqual([2]);
 	});
 	it('should add clear dependecies', () => {
 		dependency.addDependency(w1, w2);
@@ -44,12 +46,12 @@ describe('dependency test', () => {
 		dependency.addDependency(w2, w5);
 		dependency.addDependency(w2, w6);
 
-		expect(dependency.getDependents(2)).toEqual([1]);
-		expect(dependency.getDependents(3)).toEqual([1]);
-		expect(dependency.getDependents(4)).toEqual([1]);
+		expect(dependency.getDependents(2).map(p => p.id)).toEqual([1]);
+		expect(dependency.getDependents(3).map(p => p.id)).toEqual([1]);
+		expect(dependency.getDependents(4).map(p => p.id)).toEqual([1]);
 
 		dependency.clearDependencies(1);
 
-		expect(dependency.getDependents(2)).toEqual([]);
+		expect(dependency.getDependents(2).map(p => p.id)).toEqual([]);
 	});
 })

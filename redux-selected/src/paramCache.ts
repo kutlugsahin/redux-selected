@@ -1,4 +1,5 @@
 import { lruOrderedList } from './lruOrderedList';
+import { ParamCache } from './interfaces';
 
 export const NOT_EXITS = 'PARAM_CACHE_NOT_EXITS';
 
@@ -11,7 +12,7 @@ interface CacheTreeNode {
     paramArray?: any[];
 }
 
-export function paramCache(cacheSize: number = 10) {
+export function paramCache(cacheSize: number = 10): ParamCache {
     let capacity = cacheSize;
 
     const cache = new Map<any, CacheTreeNode>();

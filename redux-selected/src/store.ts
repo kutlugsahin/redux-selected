@@ -1,6 +1,6 @@
 import { Store } from 'redux';
 import { reduxsPathInitializeActionType } from './constants';
-import { Watcher } from './interfaces';
+import { Watcher, Dictionary } from './interfaces';
 import { createWatcherStore } from './watcherStore';
 
 function get(obj: any, path: string[]) {
@@ -20,6 +20,7 @@ let state: any;
 let reducers: Map<string, boolean>;
 let watcherStore: ReturnType<typeof createWatcherStore>;
 let watcherQueue: Watcher[];
+let updatedPaths: Dictionary<boolean> = {};
 
 function resetVariables() {
     store = undefined!;
@@ -37,18 +38,24 @@ function addReducerPath(path: string) {
 }
 
 function onReducerStateChanged(path: string) {
-    watcherStore.notifyWatcherForPath(path);
+    updatedPaths[path] = true;
 }
 
-function onSelectorCacheReturn(watcher: Watcher) {
+function onStoreUpdated() {
+    const paths = Object.keys(updatedPaths);
+    updatedPaths = {};
+    watcherStore.notifyWatcherForPaths(paths);    
+}
+
+function onSelectorCacheReturn(watcher: Watcher, params: any[]) {
     const currentWatcher = watcherQueue[watcherQueue.length - 1];
 
     if (currentWatcher) {
-        watcherStore.addWatcherDependency(currentWatcher, watcher);
+        watcherStore.addWatcherDependency(currentWatcher, watcher, params);
     }
 }
 
-function registerSelectorPropWatcher(watcher: Watcher) {
+function registerSelectorPropWatcher(watcher: Watcher, params: any[]) {
     const currentWatcher = watcherQueue[watcherQueue.length - 1];
 
     watcherStore.clearDependencies(watcher);
@@ -56,7 +63,7 @@ function registerSelectorPropWatcher(watcher: Watcher) {
     watcherQueue.push(watcher);
 
     if (currentWatcher) {
-        watcherStore.addWatcherDependency(currentWatcher, watcher);
+        watcherStore.addWatcherDependency(currentWatcher, watcher, params);
     }
 }
 
@@ -81,6 +88,8 @@ function setupStore(reduxStore: Store) {
             path: [],
         },
     });
+
+    store.subscribe(onStoreUpdated);
 }
 
 function getState() {
@@ -120,16 +129,4 @@ export {
     getState,
     onSelectorCacheReturn,
     setupStore,
-};
-
-export default (reduxStore: Store) => {
-    const replacer = reduxStore.replaceReducer;
-
-    reduxStore.replaceReducer = (...params) => {
-        setupStore(reduxStore);
-        return replacer(...params);
-    };
-
-    setupStore(reduxStore);
-    return reduxStore;
 };
