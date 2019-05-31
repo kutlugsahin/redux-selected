@@ -58,8 +58,10 @@ export function createWatcherStore() {
 
         while (watcherQueue.length > 0) {
             const watcher = watcherQueue.pop()!;
-            prevParamCacheMap.set(watcher.id, watcher.getCache());
-            if (watcher.notify()) {
+            if (!prevParamCacheMap.get(watcher.id)) {
+                prevParamCacheMap.set(watcher.id, watcher.getCache());
+                watcher.notify();
+
                 const dependents = dependencies.getDependents(watcher.id);
 
                 for (const dependent of dependents) {
