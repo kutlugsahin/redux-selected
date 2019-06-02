@@ -1,7 +1,7 @@
 import { dependency as dependenyMap } from '../../redux-selected/src/dependency';
-import { Watcher } from '../../redux-selected/src/interfaces';
+import { SelectorWatcher } from '../../redux-selected/src/interfaces';
 
-function watcher(id: number): Watcher {
+function watcher(id: number): SelectorWatcher {
 	return {
 		id,
 		notify() { 

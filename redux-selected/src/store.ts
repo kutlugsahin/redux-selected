@@ -1,6 +1,6 @@
 import { Store } from 'redux';
 import { reduxsPathInitializeActionType } from './constants';
-import { Watcher, Dictionary } from './interfaces';
+import { SelectorWatcher, Dictionary } from './interfaces';
 import { createWatcherStore } from './watcherStore';
 
 function get(obj: any, path: string[]) {
@@ -19,7 +19,7 @@ let store: Store;
 let state: any;
 let reducers: Map<string, boolean>;
 let watcherStore: ReturnType<typeof createWatcherStore>;
-let watcherQueue: Watcher[];
+let watcherQueue: SelectorWatcher[];
 let updatedPaths: Dictionary<boolean> = {};
 
 function resetVariables() {
@@ -47,7 +47,7 @@ function onStoreUpdated() {
     watcherStore.notifyWatcherForPaths(paths);    
 }
 
-function onSelectorCacheReturn(watcher: Watcher, params: any[]) {
+function onSelectorCacheReturn(watcher: SelectorWatcher, params: any[]) {
     const currentWatcher = watcherQueue[watcherQueue.length - 1];
 
     if (currentWatcher) {
@@ -55,7 +55,7 @@ function onSelectorCacheReturn(watcher: Watcher, params: any[]) {
     }
 }
 
-function registerSelectorPropWatcher(watcher: Watcher, params: any[]) {
+function registerSelectorPropWatcher(watcher: SelectorWatcher, params: any[]) {
     const currentWatcher = watcherQueue[watcherQueue.length - 1];
 
     watcherStore.clearDependencies(watcher);
@@ -67,7 +67,7 @@ function registerSelectorPropWatcher(watcher: Watcher, params: any[]) {
     }
 }
 
-function unregisterSelectorPropWatcher(watcher: Watcher) {
+function unregisterSelectorPropWatcher(watcher: SelectorWatcher) {
     watcherQueue.pop();
 }
 

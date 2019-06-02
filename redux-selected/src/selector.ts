@@ -1,4 +1,4 @@
-import { F0, F1, F2, F3, F4, S0, S1, S2, S3, S4, Watcher } from './interfaces';
+import { F0, F1, F2, F3, F4, S0, S1, S2, S3, S4, SelectorWatcher } from './interfaces';
 import { NOT_EXITS, paramCache } from './paramCache';
 import { getState, onSelectorCacheReturn, registerSelectorPropWatcher, unregisterSelectorPropWatcher } from './store';
 
@@ -13,7 +13,7 @@ function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
     let invalidate = true;
     let cache = paramCache(cacheSize);
 
-    const watcher: Watcher = {
+    const watcher: SelectorWatcher = {
         id: globalSelectorId++,
         notify: () => {
             if (!invalidate) {

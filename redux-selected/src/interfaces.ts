@@ -12,7 +12,7 @@ export interface Dictionary<TValue> {
     [key: string]: TValue;
 }
 
-export interface Watcher {
+export interface SelectorWatcher {
     id: number;
     notify: () => boolean;
     getCache: () => ParamCache;

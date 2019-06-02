@@ -1,13 +1,13 @@
 import { dependency } from './dependency';
-import { Watcher, ParamCache } from './interfaces';
+import { SelectorWatcher, ParamCache } from './interfaces';
 
 export function createWatcherStore() {
-    const reducerWatchers = new Map<string, Map<number, Watcher>>();
+    const reducerWatchers = new Map<string, Map<number, SelectorWatcher>>();
     const watcherReducers = new Map<number, Map<string, boolean>>();
-    const watchers = new Map<number, Watcher>();
+    const watchers = new Map<number, SelectorWatcher>();
     const dependencies = dependency();
 
-    function addReducerDependency(watcher: Watcher, path: string) {
+    function addReducerDependency(watcher: SelectorWatcher, path: string) {
         if (!reducerWatchers.get(path)) {
             reducerWatchers.set(path, new Map());
         }
@@ -24,13 +24,13 @@ export function createWatcherStore() {
         watcherReducers.get(id)!.set(path, true);
     }
 
-    function addWatcherDependency(dependentWatcher: Watcher, dependencyWatcher: Watcher, params: any[]) {
+    function addWatcherDependency(dependentWatcher: SelectorWatcher, dependencyWatcher: SelectorWatcher, params: any[]) {
         watchers.set(dependentWatcher.id, dependentWatcher);
         watchers.set(dependencyWatcher.id, dependencyWatcher);
         dependencies.addDependency(dependentWatcher, dependencyWatcher, params);
     }
 
-    function clearDependencies(watcher: Watcher) {
+    function clearDependencies(watcher: SelectorWatcher) {
         dependencies.clearDependencies(watcher.id);
 
         const pathMap = watcherReducers.get(watcher.id);
@@ -53,7 +53,7 @@ export function createWatcherStore() {
             return acc;
         }, {});
 
-        const watcherQueue: Watcher[] = Object.keys(rootWatchersMap).map(p => rootWatchersMap[p]);
+        const watcherQueue: SelectorWatcher[] = Object.keys(rootWatchersMap).map(p => rootWatchersMap[p]);
         const prevParamCacheMap = new Map<number, ParamCache>();
 
         while (watcherQueue.length > 0) {

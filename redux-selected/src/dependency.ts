@@ -1,4 +1,4 @@
-import { Watcher } from './interfaces';
+import { SelectorWatcher } from './interfaces';
 
 interface Dependent {
     id: number;
@@ -9,7 +9,7 @@ export function dependency() {
     const dependencies = new Map<number, Map<number, any[][]>>();
     const reverseDependencies = new Map<number, Map<number, any[][]>>();
 
-    function addDependency(dependentWatcher: Watcher, dependencyWatcher: Watcher, params: any[] = []) {
+    function addDependency(dependentWatcher: SelectorWatcher, dependencyWatcher: SelectorWatcher, params: any[] = []) {
         const dependentId = dependentWatcher.id;
         const dependencyId = dependencyWatcher.id;
 
