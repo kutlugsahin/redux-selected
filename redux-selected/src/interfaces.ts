@@ -14,7 +14,7 @@ export interface Dictionary<TValue> {
 
 export interface SelectorWatcher {
     id: number;
-    notify: () => boolean;
+    invalidate: () => boolean;
     getCache: () => ParamCache;
     run: (params: any[]) => any;
 }

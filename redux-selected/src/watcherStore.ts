@@ -60,7 +60,7 @@ export function createWatcherStore() {
             const watcher = watcherQueue.pop()!;
             if (!prevParamCacheMap.get(watcher.id)) {
                 prevParamCacheMap.set(watcher.id, watcher.getCache());
-                watcher.notify();
+                watcher.invalidate();
 
                 const dependents = dependencies.getDependents(watcher.id);
 
@@ -75,7 +75,7 @@ export function createWatcherStore() {
 
     function invalidateAll() {
         for (const watcher of watchers.values()) {
-            watcher.notify();
+            watcher.invalidate();
         }
     }
 

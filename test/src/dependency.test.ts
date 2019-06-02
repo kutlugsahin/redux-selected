@@ -4,7 +4,7 @@ import { SelectorWatcher } from '../../redux-selected/src/interfaces';
 function watcher(id: number): SelectorWatcher {
 	return {
 		id,
-		notify() { 
+		invalidate() { 
 			return false;
 		},
 		getCache: () => undefined!,

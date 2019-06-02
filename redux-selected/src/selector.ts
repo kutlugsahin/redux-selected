@@ -10,15 +10,15 @@ function selectorFunction<S, R, P1, P2>(nativeSelector: S2<S, R, P1, P2>, cacheS
 function selectorFunction<S, R, P1, P2, P3>(nativeSelector: S3<S, R, P1, P2, P3>, cacheSize?: number): F3<S, R, P1, P2, P3>;
 function selectorFunction<S, R, P1, P2, P3>(nativeSelector: S4<S, R, P1, P2, P3>, cacheSize?: number): F4<S, R, P1, P2, P3>;
 function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
-    let invalidate = true;
+    let shouldInvalidate = true;
     let cache = paramCache(cacheSize);
 
     const watcher: SelectorWatcher = {
         id: globalSelectorId++,
-        notify: () => {
-            if (!invalidate) {
+        invalidate: () => {
+            if (!shouldInvalidate) {
                 cache = paramCache();
-                return invalidate = true;
+                return shouldInvalidate = true;
             }
 
             return false;
@@ -27,7 +27,7 @@ function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
             return cache;
         },
         run: (params: any[]) => {
-            return result.apply(null, params);
+            return cachedSelector.apply(null, params);
         }
     };
 
@@ -39,9 +39,9 @@ function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
         return selectorResult;
     }
 
-    const result = (...params: any[]) => {
-        if (invalidate) {
-            invalidate = false;
+    const cachedSelector = (...params: any[]) => {
+        if (shouldInvalidate) {
+            shouldInvalidate = false;
             return runSelector(params);
 
         } else {
@@ -56,12 +56,12 @@ function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
         }
     };
 
-    result.native = nativeSelector;
-    result.invalidate = () => {
-        return watcher.notify();
+    cachedSelector.native = nativeSelector;
+    cachedSelector.invalidate = () => {
+        return watcher.invalidate();
     };
 
-    return result;
+    return cachedSelector;
 }
 
 export const selector = selectorFunction;
