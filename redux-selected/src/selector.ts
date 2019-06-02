@@ -27,7 +27,7 @@ function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
             return cache;
         },
         run: (params: any[]) => {
-            return result(params);
+            return result.apply(null, params);
         }
     };
 
