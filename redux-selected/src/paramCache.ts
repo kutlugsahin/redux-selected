@@ -1,7 +1,7 @@
 import { lruOrderedList } from './lruOrderedList';
 import { ParamCache } from './interfaces';
 
-export const NOT_EXITS = 'PARAM_CACHE_NOT_EXISTS';
+export const NOT_EXIST = 'PARAM_CACHE_NOT_EXISTS';
 
 interface CacheTreeNode {
     parent?: CacheTreeNode;
@@ -75,7 +75,7 @@ export function paramCache(cacheSize: number = 10): ParamCache {
             lruList.put(node.paramArray);
             return node.value;
         }
-        return NOT_EXITS;
+        return NOT_EXIST;
     }
 
     function set(params: any[], value: any) {

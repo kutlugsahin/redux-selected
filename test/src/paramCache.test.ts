@@ -1,4 +1,4 @@
-import { NOT_EXITS, paramCache } from '../../redux-selected/src/paramCache';
+import { NOT_EXIST, paramCache } from '../../redux-selected/src/paramCache';
 
 let cache: ReturnType<typeof paramCache>;
 
@@ -37,7 +37,7 @@ export default describe('paramcache', () => {
         cache.set([1, 2, 3], value3);
         cache.set([1, 2, 3, 4], value4);
 
-        expect(cache.get([1])).toEqual(NOT_EXITS);
+        expect(cache.get([1])).toEqual(NOT_EXIST);
 
     });
 
@@ -58,7 +58,7 @@ export default describe('paramcache', () => {
 
         expect(cache.get([1])).toBe(value1);
         expect(cache.get([1, 2])).toBe(value2);
-        expect(cache.get([1, 2, 3])).toBe(NOT_EXITS);
+        expect(cache.get([1, 2, 3])).toBe(NOT_EXIST);
 
         expect(cache.get([1, 2, 3, 4])).toBe(value4);
 

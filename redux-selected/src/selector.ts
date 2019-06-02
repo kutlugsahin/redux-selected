@@ -1,5 +1,5 @@
 import { F0, F1, F2, F3, F4, S0, S1, S2, S3, S4, SelectorWatcher } from './interfaces';
-import { NOT_EXITS, paramCache } from './paramCache';
+import { NOT_EXIST, paramCache } from './paramCache';
 import { getState, onSelectorCacheReturn, registerSelectorPropWatcher, unregisterSelectorPropWatcher } from './store';
 
 let globalSelectorId = 0;
@@ -46,7 +46,7 @@ function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
 
         } else {
             let cachedValue = cache.get(params);
-            if (cachedValue === NOT_EXITS) {
+            if (cachedValue === NOT_EXIST) {
                 cachedValue = runSelector(params);
                 cache.set(params, cachedValue);
             } else {
