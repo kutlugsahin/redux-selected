@@ -1,7 +1,7 @@
 import { lruOrderedList } from './lruOrderedList';
 import { ParamCache } from './interfaces';
 
-export const NOT_EXITS = 'PARAM_CACHE_NOT_EXITS';
+export const NOT_EXITS = 'PARAM_CACHE_NOT_EXISTS';
 
 interface CacheTreeNode {
     parent?: CacheTreeNode;
