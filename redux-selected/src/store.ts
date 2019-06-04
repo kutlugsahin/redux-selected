@@ -58,8 +58,6 @@ function onSelectorCacheReturn(watcher: SelectorWatcher, params: any[]) {
 function registerSelectorPropWatcher(watcher: SelectorWatcher, params: any[]) {
     const currentWatcher = watcherQueue[watcherQueue.length - 1];
 
-    watcherStore.clearDependencies(watcher);
-
     watcherQueue.push(watcher);
 
     if (currentWatcher) {

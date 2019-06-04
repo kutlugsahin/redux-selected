@@ -56,6 +56,8 @@ export function createWatcherStore() {
         const watcherQueue: SelectorWatcher[] = Object.keys(rootWatchersMap).map(p => rootWatchersMap[p]);
         const prevParamCacheMap = new Map<number, ParamCache>();
 
+        watcherQueue.forEach(clearDependencies);
+
         while (watcherQueue.length > 0) {
             const watcher = watcherQueue.pop()!;
             if (!prevParamCacheMap.get(watcher.id)) {
@@ -75,6 +77,7 @@ export function createWatcherStore() {
 
     function invalidateAll() {
         for (const watcher of watchers.values()) {
+            clearDependencies(watcher);
             watcher.invalidate();
         }
     }
