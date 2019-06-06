@@ -1,4 +1,5 @@
-import { NOT_EXIST, paramCache } from '../../redux-selected/src/paramCache';
+import { paramCache } from '../../redux-selected/src/paramCache';
+import { NOT_EXIST } from '../../redux-selected/src/paramMap';
 
 let cache: ReturnType<typeof paramCache>;
 

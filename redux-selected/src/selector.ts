@@ -1,6 +1,7 @@
 import { F0, F1, F2, F3, F4, S0, S1, S2, S3, S4, SelectorWatcher } from './interfaces';
-import { NOT_EXIST, paramCache } from './paramCache';
+import { paramCache } from './paramCache';
 import { getState, onSelectorCacheReturn, registerSelectorPropWatcher, unregisterSelectorPropWatcher } from './store';
+import { NOT_EXIST } from './paramMap';
 
 let globalSelectorId = 0;
 

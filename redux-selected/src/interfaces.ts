@@ -55,3 +55,9 @@ export interface ParamCache {
     set: (params: any[], val: any) => void;
     setSize: (size: number) => void;
 }
+
+export interface ParamMap<T> {
+    get: (params: any[]) => T | string;
+    set: (params: any[], val: T) => void;
+    remove: (params: any[]) => void;
+}
