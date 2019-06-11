@@ -23,9 +23,21 @@ export function selectorCallMap<T>(): SelectorCallMap<T> {
 		}
 		return NOT_EXIST;
 	}
+
+	function toArray() {
+		const result: T[] = [];
+
+		for (const [id, pMap] of map) {
+			result.concat(pMap.toArray())
+		}
+
+		return result;
+	}
+
 	return {
 		set,
 		get,
-		remove
+		remove,
+		toArray,
 	};
 }

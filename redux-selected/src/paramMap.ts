@@ -14,7 +14,7 @@ interface CacheTreeNode<T> {
 export function paramMap<T>(): ParamMap<T> {
 
 	const cache = new Map<any, CacheTreeNode<T>>();
-	const nodeList = [];
+	const nodeList: CacheTreeNode<T>[] = [];
 
 	function getNode(params: any[], createIfNotExist: boolean = false): CacheTreeNode<T> | undefined {
 		if (params.length) {
@@ -96,7 +96,12 @@ export function paramMap<T>(): ParamMap<T> {
 	function remove(params: any[]): void {
 		let currentNode = getNode(params);
 
-		const 
+		if (currentNode && currentNode.hasValue) {
+			const index = nodeList.indexOf(currentNode);
+			if (index > -1) {
+				nodeList.splice(index, 1);
+			}
+		}
 
 		while (currentNode) {
 			currentNode.hasValue = false;
@@ -111,9 +116,14 @@ export function paramMap<T>(): ParamMap<T> {
 		}
 	}
 
+	function toArray() {
+		return nodeList.map(p => p.value!);
+	}
+
 	return {
 		get,
 		set,
 		remove,
+		toArray,
 	};
 }

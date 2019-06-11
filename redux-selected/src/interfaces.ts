@@ -62,6 +62,7 @@ export interface ParamMap<T> {
     get: (params: any[]) => T | string;
     set: (params: any[], val: T) => void;
     remove: (params: any[]) => void;
+    toArray: () => T[];
 }
 
 export interface SelectorCall {
@@ -73,6 +74,7 @@ export interface SelectorCallMap<T> {
     set: (selectorCall: SelectorCall, value: T) => void;
     get: (selectorCall: SelectorCall) => T | string;
     remove: (selectorCall: SelectorCall) => void;
+    toArray: () => T[];
 }
 
 export interface SelectorCallData {
@@ -80,4 +82,5 @@ export interface SelectorCallData {
     cachedValue: any;
     dependents: SelectorCallMap<SelectorCallData>;
     dependencies: SelectorCallMap<SelectorCallData>;
+    runParameterizedSelector: () => any;
 }
