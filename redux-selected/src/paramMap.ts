@@ -8,11 +8,13 @@ interface CacheTreeNode<T> {
 	key: any;
 	value?: T;
 	hasValue: boolean;
+	paramArr: any[];
 }
 
 export function paramMap<T>(): ParamMap<T> {
 
 	const cache = new Map<any, CacheTreeNode<T>>();
+	const nodeList = [];
 
 	function getNode(params: any[], createIfNotExist: boolean = false): CacheTreeNode<T> | undefined {
 		if (params.length) {
@@ -29,6 +31,7 @@ export function paramMap<T>(): ParamMap<T> {
 							parent: parentNode,
 							value: undefined, // to be set later,
 							hasValue: false,
+							paramArr: undefined!,
 						};
 
 						currentMap.set(param, newNode);
@@ -55,6 +58,7 @@ export function paramMap<T>(): ParamMap<T> {
 				parent: undefined,
 				value: undefined, // to be set later,
 				hasValue: false,
+				paramArr: undefined!,
 			};
 
 			cache.set(undefined, node);
@@ -66,7 +70,7 @@ export function paramMap<T>(): ParamMap<T> {
 		const node = getNode(params);
 
 		if (node && node.hasValue) {
-			return node.value!;``
+			return node.value!;
 		}
 		return NOT_EXIST;
 	}
@@ -75,6 +79,12 @@ export function paramMap<T>(): ParamMap<T> {
 		const node = getNode(params, true);
 
 		if (node) {
+			if (!node.hasValue) {
+				// fist time node is added. So add it to list for quick traverse nodes
+				node.paramArr = params;
+				nodeList.push(node);
+			}
+
 			node.value = value;
 			node.hasValue = true;
 			return;
@@ -85,6 +95,8 @@ export function paramMap<T>(): ParamMap<T> {
 
 	function remove(params: any[]): void {
 		let currentNode = getNode(params);
+
+		const 
 
 		while (currentNode) {
 			currentNode.hasValue = false;

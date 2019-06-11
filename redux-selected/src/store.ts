@@ -1,6 +1,6 @@
 import { Store } from 'redux';
 import { reduxsPathInitializeActionType } from './constants';
-import { SelectorWatcher, Dictionary } from './interfaces';
+import { SelectorWatcher, Dictionary, SelectorCall } from './interfaces';
 import { createWatcherStore } from './watcherStore';
 
 function get(obj: any, path: string[]) {
@@ -19,13 +19,13 @@ let store: Store;
 let state: any;
 let reducers: Map<string, boolean>;
 let watcherStore: ReturnType<typeof createWatcherStore>;
-let watcherQueue: SelectorWatcher[];
+let selectorCallQueue: SelectorCall[];
 let updatedPaths: Dictionary<boolean> = {};
 
 function resetVariables() {
     store = undefined!;
     state = undefined;
-    watcherQueue = [];
+    selectorCallQueue = [];
     reducers = new Map<string, boolean>();
     if (watcherStore) {
         watcherStore.invalidateAll();
@@ -44,21 +44,24 @@ function onReducerStateChanged(path: string) {
 function onStoreUpdated() {
     const paths = Object.keys(updatedPaths);
     updatedPaths = {};
-    watcherStore.notifyWatcherForPaths(paths);    
+    watcherStore.notifyWatcherForPaths(paths);
 }
 
 function onSelectorCacheReturn(watcher: SelectorWatcher, params: any[]) {
-    const currentWatcher = watcherQueue[watcherQueue.length - 1];
+    const currentSelecterCall = selectorCallQueue[selectorCallQueue.length - 1];
 
-    if (currentWatcher) {
-        watcherStore.addWatcherDependency(currentWatcher, watcher, params);
+    if (currentSelecterCall) {
+        watcherStore.addWatcherDependency(currentSelecterCall, watcher, params);
     }
 }
 
 function registerSelectorPropWatcher(watcher: SelectorWatcher, params: any[]) {
-    const currentWatcher = watcherQueue[watcherQueue.length - 1];
+    const currentWatcher = selectorCallQueue[selectorCallQueue.length - 1];
 
-    watcherQueue.push(watcher);
+    selectorCallQueue.push({
+        watcher,
+        params,
+    });
 
     if (currentWatcher) {
         watcherStore.addWatcherDependency(currentWatcher, watcher, params);
@@ -66,11 +69,11 @@ function registerSelectorPropWatcher(watcher: SelectorWatcher, params: any[]) {
 }
 
 function unregisterSelectorPropWatcher(watcher: SelectorWatcher) {
-    watcherQueue.pop();
+    selectorCallQueue.pop();
 }
 
 function onPathRead(path: string) {
-    const activeWatcher = watcherQueue[watcherQueue.length - 1];
+    const activeWatcher = selectorCallQueue[selectorCallQueue.length - 1];
 
     if (activeWatcher) {
         watcherStore.addReducerDependency(activeWatcher, path);

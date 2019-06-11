@@ -17,6 +17,7 @@ export interface SelectorWatcher {
     invalidate: () => boolean;
     getCache: () => ParamCache;
     run: (params: any[]) => any;
+    clearCache: (params: any[]) => void;
 }
 
 export type S0<S, R> = (state: S) => R;
@@ -50,14 +51,33 @@ export interface F4<S, R, P1, P2, P3> extends F<S4<S, R, P1, P2, P3>> {
     (p1: P1, p2: P2, p3: P3, ...params: any[]): R;
 }
 
-export interface ParamCache {
-    get: (params: any[]) => any;
-    set: (params: any[], val: any) => void;
+export interface ParamCache<T = any> {
+    get: (params: any[]) => T | string;
+    set: (params: any[], val: T) => void;
     setSize: (size: number) => void;
+    remove: (params: any[]) => void;
 }
 
 export interface ParamMap<T> {
     get: (params: any[]) => T | string;
     set: (params: any[], val: T) => void;
     remove: (params: any[]) => void;
+}
+
+export interface SelectorCall {
+    selectorId: number;
+    params: any[];
+}
+
+export interface SelectorCallMap<T> {
+    set: (selectorCall: SelectorCall, value: T) => void;
+    get: (selectorCall: SelectorCall) => T | string;
+    remove: (selectorCall: SelectorCall) => void;
+}
+
+export interface SelectorCallData {
+    selectorCall: SelectorCall;
+    cachedValue: any;
+    dependents: SelectorCallMap<SelectorCallData>;
+    dependencies: SelectorCallMap<SelectorCallData>;
 }

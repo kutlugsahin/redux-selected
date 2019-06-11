@@ -16,7 +16,7 @@ function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
 
     const watcher: SelectorWatcher = {
         id: globalSelectorId++,
-        invalidate: () => {
+        invalidate() {
             if (!shouldInvalidate) {
                 cache = paramCache();
                 return shouldInvalidate = true;
@@ -24,11 +24,14 @@ function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
 
             return false;
         },
-        getCache: () => {
+        getCache() {
             return cache;
         },
-        run: (params: any[]) => {
+        run(params: any[]) {
             return cachedSelector.apply(null, params);
+        },
+        clearCache(params: any[]) {
+            cache.remove(params);
         }
     };
 
