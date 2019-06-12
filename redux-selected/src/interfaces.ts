@@ -13,11 +13,8 @@ export interface Dictionary<TValue> {
 }
 
 export interface SelectorWatcher {
-    id: number;
-    invalidate: () => boolean;
-    getCache: () => ParamCache;
+    id: number;   
     run: (params: any[]) => any;
-    clearCache: (params: any[]) => void;
 }
 
 export type S0<S, R> = (state: S) => R;
@@ -77,10 +74,10 @@ export interface SelectorCallMap<T> {
     toArray: () => T[];
 }
 
-export interface SelectorCallData {
+export interface SelectorCallState {
     selectorCall: SelectorCall;
     cachedValue: any;
-    dependents: SelectorCallMap<SelectorCallData>;
-    dependencies: SelectorCallMap<SelectorCallData>;
+    dependents: SelectorCallMap<SelectorCallState>;
+    dependencies: SelectorCallMap<SelectorCallState>;
     runParameterizedSelector: () => any;
 }

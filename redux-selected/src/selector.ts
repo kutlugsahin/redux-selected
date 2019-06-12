@@ -1,6 +1,5 @@
-import { F0, F1, F2, F3, F4, S0, S1, S2, S3, S4, SelectorWatcher } from './interfaces';
-import { paramCache } from './paramCache';
-import { getState, onSelectorCacheReturn, registerSelectorPropWatcher, unregisterSelectorPropWatcher } from './store';
+import { F0, F1, F2, F3, F4, S0, S1, S2, S3, S4, SelectorWatcher, ParamCache, SelectorCallState } from './interfaces';
+import { getState, beginSelectorRun, endSelectorRun, onSelectorCacheReturned, registerSelector } from './store2';
 import { NOT_EXIST } from './paramMap';
 
 let globalSelectorId = 0;
@@ -11,58 +10,37 @@ function selectorFunction<S, R, P1, P2>(nativeSelector: S2<S, R, P1, P2>, cacheS
 function selectorFunction<S, R, P1, P2, P3>(nativeSelector: S3<S, R, P1, P2, P3>, cacheSize?: number): F3<S, R, P1, P2, P3>;
 function selectorFunction<S, R, P1, P2, P3>(nativeSelector: S4<S, R, P1, P2, P3>, cacheSize?: number): F4<S, R, P1, P2, P3>;
 function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
-    let shouldInvalidate = true;
-    let cache = paramCache(cacheSize);
-
     const watcher: SelectorWatcher = {
         id: globalSelectorId++,
-        invalidate() {
-            if (!shouldInvalidate) {
-                cache = paramCache();
-                return shouldInvalidate = true;
-            }
-
-            return false;
-        },
-        getCache() {
-            return cache;
-        },
         run(params: any[]) {
             return cachedSelector.apply(null, params);
         },
-        clearCache(params: any[]) {
-            cache.remove(params);
-        }
     };
 
+    const paramCache: ParamCache<SelectorCallState> = registerSelector(watcher, cacheSize);
+
     function runSelector(params: any[]) {
-        registerSelectorPropWatcher(watcher, params);
+        beginSelectorRun(watcher, params);
         const selectorResult = nativeSelector(getState() as S, ...params);
-        unregisterSelectorPropWatcher(watcher);
-        cache.set(params, selectorResult);
+        endSelectorRun();
+        paramCache.set(params, selectorResult);
         return selectorResult;
     }
 
     const cachedSelector = (...params: any[]) => {
-        if (shouldInvalidate) {
-            shouldInvalidate = false;
+        let callState = paramCache.get(params);
+        if (callState === NOT_EXIST || (callState as SelectorCallState).cachedValue === NOT_EXIST) {
             return runSelector(params);
-
         } else {
-            let cachedValue = cache.get(params);
-            if (cachedValue === NOT_EXIST) {
-                cachedValue = runSelector(params);
-                cache.set(params, cachedValue);
-            } else {
-                onSelectorCacheReturn(watcher, params);
-            }
-            return cachedValue;
+            const selectorCallState = callState as SelectorCallState;
+            onSelectorCacheReturned(selectorCallState);
+            return selectorCallState.cachedValue;
         }
     };
 
     cachedSelector.native = nativeSelector;
     cachedSelector.invalidate = () => {
-        return watcher.invalidate();
+        // return watcher.invalidate();
     };
 
     return cachedSelector;
