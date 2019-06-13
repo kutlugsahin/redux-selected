@@ -10,46 +10,43 @@ let state: any;
 let selectorStore = new Map<number, ParamCache<SelectorCallState>>();
 let selectors = new Map<number, SelectorWatcher>();
 let selectorCallQueue: SelectorCallState[] = [];
-let reducerListenerCalls = new Map<string, SelectorCallMap<SelectorCallState>>();
+let reducerListenerCalls = new Map<string, Set<SelectorCallState>>();
 let updatedReducers: Dictionary<boolean> = {};
 
 function addSelectorDependency(dependent: SelectorCallState, dependency: SelectorCallState) {
-	dependent.dependencies.set(dependency.selectorCall, dependency);
-	dependency.dependents.set(dependent.selectorCall, dependent);
+	dependent.dependencies.set(dependency, true);
+	dependency.dependents.set(dependent, true);
 }
 
 function addReducerDependency(dependent: SelectorCallState, path: string) {
 	// TODO
-	let reducerPathMap = reducerListenerCalls.get(path);
+	let reducerPathSet = reducerListenerCalls.get(path);
 
-	if (!reducerPathMap) {
-		reducerPathMap = selectorCallMap()
-		reducerListenerCalls.set(path, reducerPathMap);
+	if (!reducerPathSet) {
+		reducerPathSet = new Set();
 	}
 
-	reducerPathMap.set(dependent.selectorCall, dependent);
+	reducerPathSet.add(dependent);
 }
 
 function clearSelectorDependency(selectorCallData: SelectorCallState) {
-	for (const [path, map] of reducerListenerCalls) {
-		map.remove(selectorCallData.selectorCall);
+	for (const [path, set] of reducerListenerCalls) {
+		set.delete(selectorCallData);
 	}
 
-	for (const dependency of selectorCallData.dependencies.toArray()) {
-		dependency.dependents.remove(selectorCallData.selectorCall);
+	for (const dependency of selectorCallData.dependencies.keys()) {
+		dependency.dependents.delete(selectorCallData);
 	}
 
-	selectorCallData.dependencies = selectorCallMap();
+	selectorCallData.dependencies = new Map();
 }
 
 function notifyWatcherForPaths(paths: string[]) {
-	const selectorCallDatas = paths.reduce((acc: SelectorCallState[], path) => { 
-		const map = reducerListenerCalls.get(path)!;
-		const callDatas = map.toArray();
-		return [...acc, ...callDatas];
+	const selectorCallStates = paths.reduce((acc: SelectorCallState[], path) => {
+		return [...acc, ...reducerListenerCalls.get(path)!.keys()];
 	}, []);
 
-	let currentSelectorCallData = selectorCallDatas.pop();
+	let currentSelectorCallData = selectorCallStates.pop();
 
 	while (currentSelectorCallData) {
 		const cachedValue = currentSelectorCallData.cachedValue;
@@ -59,16 +56,14 @@ function notifyWatcherForPaths(paths: string[]) {
 			if (newValue !== cachedValue) {
 				currentSelectorCallData.cachedValue = NOT_EXIST;
 
-				const dependents = currentSelectorCallData.dependents.toArray();
+				const dependents = currentSelectorCallData.dependents.keys();
 
-				if (dependents.length) {
-					for (const dependent of dependents) {
-						selectorCallDatas.unshift(dependent);
-					}
+				for (const dependent of dependents) {
+					selectorCallStates.unshift(dependent);
 				}
 			}
 		}
-		currentSelectorCallData = selectorCallDatas.pop();
+		currentSelectorCallData = selectorCallStates.pop();
 	}
 }
 
@@ -85,8 +80,8 @@ export function beginSelectorRun(selector: SelectorWatcher, params: any[] = []) 
 	if (selectorCallData === NOT_EXIST) {
 		selectorCallData = {
 			cachedValue: NOT_EXIST,
-			dependencies: selectorCallMap(),
-			dependents: selectorCallMap(),
+			dependencies: new Map(),
+			dependents: new Map(),
 			selectorCall: {
 				params,
 				selectorId: selector.id,
@@ -155,7 +150,7 @@ export function getState() {
 function resetVariables() {
 	store = undefined!;
 	state = undefined;
-	
+
 }
 
 function setupStore(reduxStore: Store) {
