@@ -1,5 +1,5 @@
 import { SelectorCall, ParamMap, SelectorCallMap } from "./interfaces";
-import { paramMap, NOT_EXIST } from "./paramMap";
+import { paramMap, NOT_EXIST } from "./structures/paramMap";
 
 export function selectorCallMap<T>(): SelectorCallMap<T> {
 	const map = new Map<number, ParamMap<T>>();

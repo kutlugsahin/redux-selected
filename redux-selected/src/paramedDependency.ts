@@ -1,5 +1,5 @@
 import { SelectorWatcher, SelectorCall, ParamMap } from "./interfaces";
-import { paramMap } from "./paramMap";
+import { paramMap } from "./structures/paramMap";
 
 interface Dependent {
 	id: number;

@@ -1,4 +1,4 @@
-import { ParamMap } from './interfaces';
+import { ParamMap } from '../interfaces';
 
 export const NOT_EXIST = 'PARAM_CACHE_NOT_EXISTS';
 
@@ -66,13 +66,13 @@ export function paramMap<T>(): ParamMap<T> {
 		return node;
 	}
 
-	function get(params: any[]): T | string {
+	function get(params: any[]): T | undefined {
 		const node = getNode(params);
 
 		if (node && node.hasValue) {
 			return node.value!;
 		}
-		return NOT_EXIST;
+		return undefined;
 	}
 
 	function set(params: any[], value: T) {
@@ -93,13 +93,14 @@ export function paramMap<T>(): ParamMap<T> {
 		throw 'Not expected';
 	}
 
-	function remove(params: any[]): void {
+	function remove(params: any[]): T | undefined {
 		let currentNode = getNode(params);
+		let removed: CacheTreeNode<T> | undefined;
 
 		if (currentNode && currentNode.hasValue) {
 			const index = nodeList.indexOf(currentNode);
 			if (index > -1) {
-				nodeList.splice(index, 1);
+				removed = nodeList.splice(index, 1)[0];
 			}
 		}
 
@@ -114,6 +115,8 @@ export function paramMap<T>(): ParamMap<T> {
 			currentMap.delete(currentNode.key);
 			currentNode = currentNode.parent;
 		}
+
+		return removed ? removed.value : undefined;
 	}
 
 	function toArray() {

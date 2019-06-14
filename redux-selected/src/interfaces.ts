@@ -56,9 +56,9 @@ export interface ParamCache<T = any> {
 }
 
 export interface ParamMap<T> {
-    get: (params: any[]) => T | string;
+    get: (params: any[]) => T | undefined;
     set: (params: any[], val: T) => void;
-    remove: (params: any[]) => void;
+    remove: (params: any[]) => T | undefined;
     toArray: () => T[];
 }
 

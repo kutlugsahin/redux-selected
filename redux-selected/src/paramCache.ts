@@ -1,6 +1,6 @@
 import { lruOrderedList } from './lruOrderedList';
 import { ParamCache } from './interfaces';
-import { paramMap, NOT_EXIST } from './paramMap';
+import { paramMap, NOT_EXIST } from './structures/paramMap';
 
 interface CachedValue<T> {
     value: T;

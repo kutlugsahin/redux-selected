@@ -1,6 +1,6 @@
 import { paramCache } from "./paramCache";
 import { ParamCache, SelectorWatcher, SelectorCallState, SelectorCall, SelectorCallMap, Dictionary } from "./interfaces";
-import { NOT_EXIST } from "./paramMap";
+import { NOT_EXIST } from "./structures/paramMap";
 import { selectorCallMap } from "./selectorCallMap";
 import { Store } from "redux";
 import { reduxsPathInitializeActionType } from "./constants";
