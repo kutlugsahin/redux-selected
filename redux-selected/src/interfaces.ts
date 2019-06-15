@@ -75,9 +75,11 @@ export interface SelectorCallMap<T> {
 }
 
 export interface SelectorCallState {
-    selectorCall: SelectorCall;
-    cachedValue: any;
+    call: SelectorCall;
+    value: any;
     dependents: Map<SelectorCallState, boolean>;
     dependencies: Map<SelectorCallState, boolean>;
-    runParameterizedSelector: () => any;
+    invalidDependencyCount: number;
+    run: () => any;
+    isValid: boolean;
 }

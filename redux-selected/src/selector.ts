@@ -1,6 +1,6 @@
-import { F0, F1, F2, F3, F4, S0, S1, S2, S3, S4, SelectorWatcher, ParamCache, SelectorCallState } from './interfaces';
-import { getState, beginSelectorRun, endSelectorRun, onSelectorCacheReturned, registerSelector } from './store2';
-import { NOT_EXIST } from './structures/paramMap';
+import { F0, F1, F2, F3, F4, S0, S1, S2, S3, S4, SelectorWatcher } from './interfaces';
+import { beginSelectorRun, endSelectorRun, getState, onSelectorCacheReturned } from './store';
+import { selectorStore } from './selectorStore';
 
 let globalSelectorId = 0;
 
@@ -17,24 +17,23 @@ function selectorFunction<S>(nativeSelector: any, cacheSize?: number): any {
         },
     };
 
-    const paramCache: ParamCache<SelectorCallState> = registerSelector(watcher, cacheSize);
-
     function runSelector(params: any[]) {
         beginSelectorRun(watcher, params);
         const selectorResult = nativeSelector(getState() as S, ...params);
         endSelectorRun();
-        paramCache.set(params, selectorResult);
         return selectorResult;
     }
 
     const cachedSelector = (...params: any[]) => {
-        let callState = paramCache.get(params);
-        if (callState === NOT_EXIST || (callState as SelectorCallState).cachedValue === NOT_EXIST) {
-            return runSelector(params);
+        let callState = selectorStore.getSelectorCallState(watcher.id, params);
+        if (!callState) {
+            selectorStore.createSelectorCallState(watcher.id, params, () => runSelector(params));
+            const result = runSelector(params);
+            selectorStore.getSelectorCallState(watcher.id, params)!.value = result;
+            return result;
         } else {
-            const selectorCallState = callState as SelectorCallState;
-            onSelectorCacheReturned(selectorCallState);
-            return selectorCallState.cachedValue;
+            onSelectorCacheReturned(callState)
+            return callState.value;
         }
     };
 

@@ -1,7 +1,7 @@
 import { Action, Reducer } from 'redux';
 import { reduxsPathInitializeActionType } from './constants';
 import { ReduxsPathInitAction } from './interfaces';
-import { addReducerPath, onReducerStateChanged } from './store';
+import { addReducerPath, onReducerPathUpdated } from './store';
 
 export function reducer<TState, TAction extends Action<any>>(nativeReducer: Reducer<TState, TAction>)
     : Reducer<TState, TAction> {
@@ -19,7 +19,7 @@ export function reducer<TState, TAction extends Action<any>>(nativeReducer: Redu
 
         if (path && oldState !== newState) {
             console.log(`reducer ${path} changed`);
-            onReducerStateChanged(path);
+            onReducerPathUpdated(path);
         }
 
         oldState = newState;

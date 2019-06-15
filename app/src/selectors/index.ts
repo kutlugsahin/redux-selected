@@ -8,6 +8,7 @@ export const selectUsers = selector((state: State): User[] => {
 });
 
 export const selectLeftPanelState = selector((state: State) => {
+	selectFirstUserName();
 	return state.ui.panelState['left']
 });
 
